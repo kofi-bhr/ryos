@@ -135,10 +135,19 @@ export function ChatMessages({
   const mountedAt = useRef(Date.now());
   const initialLoadComplete = useRef(false);
 
-  // Ref to track initial message IDs for animation control
+  // Ref to track if we have captured the initial IDs for this component instance
+  const capturedInitialIds = useRef(false);
+  // Ref to store the initial IDs. Populated during the first render with messages.
   const initialMessageIdsRef = useRef<Set<string>>(new Set());
-  const hasInitializedRef = useRef(false);
   const previousMessagesRef = useRef<ChatMessage[]>([]); // Ref to store previous messages for comparison
+
+  // --- Populate initialMessageIdsRef ---
+  // This runs during render. Captures IDs the first time messages are non-empty.
+  if (!capturedInitialIds.current && messages.length > 0) {
+    console.log('[ChatMessages] Capturing initial message IDs during render');
+    initialMessageIdsRef.current = new Set(messages.map(m => m.id || `${m.role}-${m.content.substring(0, 10)}`));
+    capturedInitialIds.current = true; // Mark as captured for this instance
+  }
 
   // --- New Effect for Sound/Vibration ---
   useEffect(() => {
@@ -173,25 +182,37 @@ export function ChatMessages({
   // Capture initial message IDs on mount (runs once per component instance/key change)
   // Also sets initial refs related to scrolling/loading state
   useEffect(() => {
-    // Reset everything for this new instance
-    console.log('[Scroll] Component mounted with new key');
+    // Reset scroll/load state for this new instance (keyed mount)
+    console.log('[Scroll] Component instance mounted/key changed');
     wasAtBottom.current = true;
     initialLoadComplete.current = false; // Mark that initial loading/scrolling hasn't happened yet
     setScrollLockedToBottom(true); // Assume locked to bottom initially
     mountedAt.current = Date.now();
-    
-    // Only initialize once per component instance (keyed mount)
-    if (!hasInitializedRef.current && messages.length > 0) {
-      hasInitializedRef.current = true;
-      previousMessagesRef.current = messages; // Initialize previous messages on mount
-      
-      // Handle initial scroll
-      // Initial scroll is now handled by the messages.length effect
-    } else if (messages.length === 0) { // Also reset if starting empty
-      hasInitializedRef.current = false; // Allow re-initialization if messages appear later
+    previousMessagesRef.current = messages; // Initialize previous messages tracking
+
+    // Reset captured flag on remount (due to key change)
+    // This allows re-capturing if the component instance changes
+    const wasCaptured = capturedInitialIds.current;
+    capturedInitialIds.current = false;
+    // Repopulate if messages are already present on remount and weren't captured in the *very first* render cycle
+    if (messages.length > 0 && !wasCaptured) {
+        console.log('[ChatMessages] Re-capturing initial message IDs in mount effect');
+        initialMessageIdsRef.current = new Set(messages.map(m => m.id || `${m.role}-${m.content.substring(0, 10)}`));
+        capturedInitialIds.current = true;
+    } else if (messages.length === 0) {
+        // Clear the set if mounting empty, ensure captured flag is false
+         console.log('[ChatMessages] Mounting empty, clearing initial IDs ref');
+        initialMessageIdsRef.current.clear();
+        capturedInitialIds.current = false; // Ensure it stays false if starting empty
+    } else {
+         console.log('[ChatMessages] Mounting with messages already captured during render');
     }
-    initialMessageIdsRef.current = new Set(messages.map(m => m.id || `${m.role}-${m.content.substring(0, 10)}`));
-  }, []); // Run only once on mount for this instance
+
+    return () => {
+      // Cleanup if needed when component unmounts or key changes
+      console.log('[Scroll] Component instance unmounting/key changing');
+    };
+  }, []); // Run only once on mount/remount for this instance (due to key)
 
   const copyMessage = async (message: ChatMessage) => {
     try {
@@ -240,7 +261,6 @@ export function ChatMessages({
     }
   };
 
-  // Handle message changes and initial scroll
   // Scrolls to bottom on initial load or when new messages arrive AND scroll is locked
   useEffect(() => {
     const scrollAreaElement = scrollAreaRef.current;
@@ -248,33 +268,53 @@ export function ChatMessages({
     const viewport = scrollAreaElement.querySelector<HTMLElement>('[data-radix-scroll-area-viewport]');
     if (!viewport) return;
 
-    // Check if we should scroll:
-    // 1. It's the very first render cycle where messages are populated (initialLoadComplete is false)
-    // 2. Or, scroll is locked to the bottom AND new messages have arrived.
-    const isFirstMeaningfulRender = !initialLoadComplete.current && messages.length > 0;
+    // Check conditions
     const hasNewMessages = messages.length > previousMessagesLength.current;
-    const shouldScroll = isFirstMeaningfulRender || (scrollLockedToBottom && hasNewMessages);
+    const isReadyForInitialScroll = !initialLoadComplete.current && messages.length > 0;
 
-    if (shouldScroll) {
-        // Defer scroll until after the DOM updates from this render cycle
+    if (isReadyForInitialScroll) {
+        // Perform initial scroll
         requestAnimationFrame(() => {
-            // Re-query the viewport in case component unmounted/remounted quickly or ref changed
             const currentScrollAreaElement = scrollAreaRef.current;
             if (!currentScrollAreaElement) return;
             const currentViewport = currentScrollAreaElement.querySelector<HTMLElement>('[data-radix-scroll-area-viewport]');
 
             if (currentViewport) {
-                console.log(`[Scroll] Scrolling to bottom. Reason: ${isFirstMeaningfulRender ? 'Initial load' : 'New message & locked'}`);
-                currentViewport.scrollTop = currentViewport.scrollHeight;
-
-                // If this was the initial scroll, mark it complete and set state
-                if (isFirstMeaningfulRender) {
-                    console.log('[Scroll] Initial load scroll complete.');
-                    initialLoadComplete.current = true;
-                    // Ensure lock state reflects reality after initial scroll
-                    // setScrollLockedToBottom(true); // Already set on mount/reset
-                    wasAtBottom.current = true;
-                }
+                console.log(`[Scroll] Scheduling initial scroll.`);
+                setTimeout(() => {
+                    const latestScrollAreaElement = scrollAreaRef.current;
+                    // Check viewport validity *and* if initial load hasn't been marked complete yet
+                    if (latestScrollAreaElement?.contains(currentViewport) && !initialLoadComplete.current) {
+                        console.log(`[Scroll] Executing initial scroll.`);
+                        currentViewport.scrollTop = currentViewport.scrollHeight;
+                        // Mark initial load as complete ONLY after successful scroll
+                        initialLoadComplete.current = true;
+                        wasAtBottom.current = true; // Assume we are at bottom after initial scroll
+                        console.log('[Scroll] Initial scroll complete, marked complete.');
+                    } else {
+                         console.log('[Scroll] Initial scroll aborted (viewport invalid or already completed).');
+                    }
+                }, 0);
+            }
+        });
+    } else if (hasNewMessages && scrollLockedToBottom) {
+        // Perform scroll for new messages if locked
+        requestAnimationFrame(() => {
+             const currentScrollAreaElement = scrollAreaRef.current;
+            if (!currentScrollAreaElement) return;
+            const currentViewport = currentScrollAreaElement.querySelector<HTMLElement>('[data-radix-scroll-area-viewport]');
+            if (currentViewport) {
+                 console.log(`[Scroll] Scheduling new message scroll (locked: ${scrollLockedToBottom}).`);
+                 setTimeout(() => {
+                     const latestScrollAreaElement = scrollAreaRef.current;
+                     if (latestScrollAreaElement?.contains(currentViewport)) { // Check containment
+                         console.log(`[Scroll] Executing new message scroll.`);
+                         currentViewport.scrollTop = currentViewport.scrollHeight;
+                         wasAtBottom.current = true; // Remain at bottom
+                     } else {
+                          console.log('[Scroll] New message scroll aborted (viewport invalid).');
+                     }
+                 }, 0); 
             }
         });
     } else if (hasNewMessages) {
@@ -283,7 +323,7 @@ export function ChatMessages({
 
     // Update previous length ref *after* processing the current state
     previousMessagesLength.current = messages.length;
-  }, [messages.length, scrollLockedToBottom]); // Trigger only when length changes or lock state changes
+  }, [messages, scrollLockedToBottom]); // Trigger when messages object itself changes or lock state changes
 
   const isUrgentMessage = (content: string) => content.startsWith("!!!!");
 
@@ -327,7 +367,9 @@ export function ChatMessages({
           )}
           {messages.map((message) => {
             const messageKey = message.id || `${message.role}-${message.content.substring(0, 10)}`;
+            // Use the ref populated during render or mount effect
             const isInitialMessage = initialMessageIdsRef.current.has(messageKey);
+            // console.log(`Rendering message ${messageKey.substring(0,10)}... Initial: ${isInitialMessage}`); // Optional: uncomment for debugging
 
             // Define animation variants
             const variants = {
@@ -551,38 +593,44 @@ export function ChatMessages({
                           <>
                             {/* Show only non-HTML text content */}
                             {textContent &&
-                              segmentText(textContent).map((segment, idx) => (
-                                <motion.span
-                                  key={idx}
-                                  // Skip initial animation for initial messages
-                                  initial={isInitialMessage ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-                                  animate={{ opacity: 1, y: 0 }}
-                                  className={`select-text ${
-                                    isEmojiOnly(textContent) ? "text-[24px]" : ""
-                                  } ${
-                                    segment.type === "bold"
-                                      ? "font-bold"
-                                      : segment.type === "italic"
-                                      ? "italic"
-                                      : ""
-                                  }`}
-                                  style={{ userSelect: "text" }}
-                                  transition={{
-                                    // Always use the standard transition
+                              segmentText(textContent).map((segment, idx) => {
+                                // Define the transition conditionally
+                                const spanTransition = isInitialMessage
+                                ? { duration: 0, delay: 0 } // No animation for initial messages
+                                : { // Apply animation for new messages
                                     duration: 0.15,
                                     delay: idx * 0.05,
                                     ease: "easeOut",
                                     onComplete: () => {
-                                      // Always attempt to play sound (standard behavior)
+                                      // Only play sound for new messages
                                       if (idx % 2 === 0) { 
                                         playNote();
                                       }
                                     },
-                                  }}
-                                >
-                                  {segment.content}
-                                </motion.span>
-                              ))}
+                                  };
+
+                                return (
+                                  <motion.span
+                                    key={idx}
+                                    // Skip initial animation state for initial messages
+                                    initial={isInitialMessage ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className={`select-text ${
+                                      isEmojiOnly(textContent) ? "text-[24px]" : ""
+                                    } ${
+                                      segment.type === "bold"
+                                        ? "font-bold"
+                                        : segment.type === "italic"
+                                        ? "italic"
+                                        : ""
+                                    }`}
+                                    style={{ userSelect: "text" }}
+                                    transition={spanTransition} // Use the refined conditional transition
+                                  >
+                                    {segment.content}
+                                  </motion.span>
+                                );
+                              })}
 
                             {/* Show HTML preview if there's HTML content */}
                             {hasHtml && htmlContent && (

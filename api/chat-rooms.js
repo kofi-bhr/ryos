@@ -356,7 +356,9 @@ async function handleGetMessages(roomId, requestId) {
           return null;
         }
       })
-      .filter(message => message !== null);
+      .filter(message => message !== null)
+      // Sort messages chronologically by timestamp (oldest first)
+      .sort((a, b) => a.timestamp - b.timestamp);
 
     logInfo(requestId, `Processed ${messages.length} valid messages for room ${roomId}`);
 
