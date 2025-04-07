@@ -121,6 +121,11 @@ export const APP_STORAGE_KEYS = {
     COMMAND_HISTORY: "terminal:commandHistory" as const,
     CURRENT_PATH: "terminal:currentPath" as const,
   },
+  email: {
+    WINDOW: "email:window" as const,
+    HAS_SEEN_HELP: "email:hasSeenHelp" as const,
+    DATA: "email:data" as const,
+  },
 } as const;
 
 interface WindowState {
@@ -720,6 +725,10 @@ export const clearAllAppStates = (): void => {
   localStorage.removeItem(APP_STORAGE_KEYS.terminal.HAS_SEEN_HELP);
   localStorage.removeItem(APP_STORAGE_KEYS.terminal.COMMAND_HISTORY);
   localStorage.removeItem(APP_STORAGE_KEYS.terminal.CURRENT_PATH);
+
+  localStorage.removeItem(APP_STORAGE_KEYS.email.WINDOW);
+  localStorage.removeItem(APP_STORAGE_KEYS.email.HAS_SEEN_HELP);
+  localStorage.removeItem(APP_STORAGE_KEYS.email.DATA);
 
   // Clear desktop icon state
   localStorage.removeItem("desktop:icons");

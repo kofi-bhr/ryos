@@ -12,6 +12,7 @@ import { PhotoBoothApp } from "@/apps/photo-booth";
 import { SynthApp } from "@/apps/synth";
 import { IpodApp } from "@/apps/ipod";
 import { TerminalApp } from "@/apps/terminal";
+import { EmailApp } from "@/apps/email";
 
 export interface WindowSize {
   width: number;
@@ -134,6 +135,13 @@ export const appRegistry = {
       defaultSize: { width: 365, height: 400 },
       minSize: { width: 320, height: 400 },
       maxSize: { width: 365, height: 600 },
+    } as WindowConstraints,
+  },
+  [EmailApp.id]: {
+    ...EmailApp,
+    windowConfig: {
+      defaultSize: { width: 700, height: 500 },
+      minSize: { width: 500, height: 400 },
     } as WindowConstraints,
   },
 } as const;
