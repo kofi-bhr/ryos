@@ -157,7 +157,7 @@ interface TrashItem extends ExtendedFileItem {
 export const DOCUMENTS: Document[] = [
   {
     name: "README.md",
-    content: `# ryOS 8.2
+    content: `# apartheidOS 8.2
 
 A web-based operating system experience inspired by classic Mac OS System 7. Built using modern web technologies including React, Vite, TailwindCSS, and shadcn/ui components.
 
@@ -180,7 +180,7 @@ A web-based operating system experience inspired by classic Mac OS System 7. Bui
 - **Soundboard**: Create and play custom soundboards
 - **Synth**: Virtual synthesizer with retro aesthetics
 - **Photo Booth**: Camera app with effects and filters
-- **Control Panels**: Customize ryOS system settings
+- **Control Panels**: Customize apartheidOS system settings
 - **Minesweeper**: Classic puzzle game
 - **Internet Explorer**: Browse historical web content
 - **Chats**: Chat with Ryo AI assistant
@@ -205,7 +205,7 @@ A web-based operating system experience inspired by classic Mac OS System 7. Bui
 - Tone.js for audio synthesis
 - Virtual PC Emulator powered by DOSBox
 
-Visit https://github.com/ryokun6/ryos for more information.`,
+Visit https://github.com/ryokun6/apartheidOS for more information.`,
   },
   {
     name: "Quick Tips.md",

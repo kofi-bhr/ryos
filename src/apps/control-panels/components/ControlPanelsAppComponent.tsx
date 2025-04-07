@@ -281,7 +281,7 @@ export function ControlPanelsAppComponent({
       .split("T")
       .join("-")
       .slice(0, -5);
-    a.download = `ryOS-backup-${timestamp}.gz`;
+    a.download = `apartheidOS-backup-${timestamp}.gz`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -492,7 +492,7 @@ export function ControlPanelsAppComponent({
                   <div className="flex flex-col gap-1">
                     <Label>Chat synth</Label>
                     <Label className="text-[11px] text-gray-600 font-geneva-12 pr-1">
-                      ryOS will restart to apply new settings
+                      apartheidOS will restart to apply new settings
                     </Label>
                   </div>
                   <Select
@@ -572,7 +572,7 @@ export function ControlPanelsAppComponent({
                   </Button>
                   <p className="text-[11px] text-gray-600 font-geneva-12">
                     This will clear all documents (except sample documents),
-                    images, and custom wallpapers. ryOS will restart after
+                    images, and custom wallpapers. apartheidOS will restart after
                     format.
                   </p>
                 </div>
@@ -597,7 +597,7 @@ export function ControlPanelsAppComponent({
           onOpenChange={setIsConfirmResetOpen}
           onConfirm={handleConfirmReset}
           title="Reset All Settings"
-          description="Are you sure you want to reset all settings? This will clear all saved settings and restore default states. ryOS will restart after reset."
+          description="Are you sure you want to reset all settings? This will clear all saved settings and restore default states. apartheidOS will restart after reset."
         />
         <ConfirmDialog
           isOpen={isConfirmFormatOpen}
@@ -607,7 +607,7 @@ export function ControlPanelsAppComponent({
             window.location.reload();
           }}
           title="Format File System"
-          description="Are you sure you want to format the file system? This will permanently delete all documents (except sample documents), images, and custom wallpapers. ryOS will restart after format."
+          description="Are you sure you want to format the file system? This will permanently delete all documents (except sample documents), images, and custom wallpapers. apartheidOS will restart after format."
         />
       </WindowFrame>
     </>

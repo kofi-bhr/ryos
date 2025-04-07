@@ -1,5 +1,5 @@
 /**
- * This file contains all the content for the Ryos application in one place
+ * This file contains all the content for the apartheidOS application in one place
  * for easy editing. You can modify text, images, videos, and other content here.
  */
 
@@ -18,7 +18,7 @@ export const SiteContent = {
   
   // General site information
   site: {
-    title: 'Ryos',
+    title: 'apartheidOS',
     description: 'A retro-inspired desktop environment',
     author: 'Kofi Hairralson',
     favicon: '/public/icons/favicon.ico',
@@ -188,8 +188,8 @@ export const SiteContent = {
         playlist: [
           {
             id: 'video1',
-            title: 'Introduction to Ryos',
-            description: 'A brief introduction to the Ryos desktop environment',
+            title: 'Introduction to apartheidOS',
+            description: 'A brief introduction to the apartheidOS desktop environment',
             url: 'https://example.com/videos/intro.mp4',
             thumbnail: '/public/images/videos/intro-thumb.jpg',
             duration: 120 // in seconds
@@ -197,7 +197,7 @@ export const SiteContent = {
           {
             id: 'video2',
             title: 'Tutorial: Using the Email App',
-            description: 'Learn how to use the email application in Ryos',
+            description: 'Learn how to use the email application in apartheidOS',
             url: 'https://example.com/videos/email-tutorial.mp4',
             thumbnail: '/public/images/videos/email-thumb.jpg',
             duration: 180 // in seconds
@@ -214,7 +214,7 @@ export const SiteContent = {
           {
             id: 'room1',
             name: 'General',
-            description: 'General discussion about Ryos',
+            description: 'General discussion about apartheidOS',
             messages: [
               {
                 id: 'msg1',
@@ -239,7 +239,7 @@ export const SiteContent = {
           {
             id: 'room2',
             name: 'Support',
-            description: 'Get help with Ryos',
+            description: 'Get help with apartheidOS',
             messages: [
               {
                 id: 'msg1',

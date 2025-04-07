@@ -1,7 +1,7 @@
 // This is a fallback service worker that gets used if vite-plugin-pwa's service worker isn't registered
 // It provides a basic caching strategy
 
-const CACHE_NAME = "ryos-cache-v1";
+const CACHE_NAME = "apartheidos-cache-v1";
 const urlsToCache = ["/", "/index.html", "/src/main.tsx", "/icons/mac.png"];
 
 self.addEventListener("install", (event) => {

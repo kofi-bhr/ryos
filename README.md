@@ -1,4 +1,4 @@
-# ryOS — Web-based Desktop Environment
+# apartheidOS — Web-based Desktop Environment
 
 A modern web-based desktop environment inspired by classic macOS, built with React and modern web technologies. Features multiple built-in applications and a familiar desktop interface. Works on all devices—including mobile, tablet, and desktop.
 

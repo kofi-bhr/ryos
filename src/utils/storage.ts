@@ -761,7 +761,7 @@ export const loadDocuments = (): Document[] => {
   return [
     {
       name: "README.md",
-      content: `# ryOS\n\nA web-based operating system experience...`,
+      content: `# apartheidOS\n\nA web-based operating system experience...`,
       type: "markdown",
     },
     {
@@ -1423,7 +1423,7 @@ export const saveChatSidebarVisible = (isVisible: boolean): void => {
 };
 
 // Add these constants for IndexedDB at the end of the file
-const DB_NAME = "ryOS";
+const DB_NAME = "apartheidOS";
 const DB_VERSION = 3;
 const STORES = {
   DOCUMENTS: "documents",

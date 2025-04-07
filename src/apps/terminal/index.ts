@@ -40,10 +40,10 @@ export const TerminalApp: BaseApp = {
     name: "Terminal",
     version: "1.0",
     creator: {
-      name: "ryOS Developer",
-      url: "https://github.com/ryokun6/ryos",
+      name: "apartheidOS Developer",
+      url: "https://github.com/ryokun6/apartheidOS",
     },
-    github: "https://github.com/ryokun6/ryos",
+    github: "https://github.com/ryokun6/apartheidOS",
     icon: "/icons/terminal.png",
   },
 };

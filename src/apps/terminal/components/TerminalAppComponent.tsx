@@ -428,7 +428,7 @@ export function TerminalAppComponent({
         id: "system",
         role: "system",
         content:
-          "You are a helpful AI assistant and genius web front-end programmer running in a terminal on ryOS.",
+          "You are a helpful AI assistant and genius web front-end programmer running in a terminal on apartheidOS.",
       },
     ],
     experimental_throttle: 50,
@@ -1988,7 +1988,7 @@ assistant
             id: "system",
             role: "system",
             content:
-              "You are a coding assistant running in the terminal app on ryOS.",
+              "You are a coding assistant running in the terminal app on apartheidOS.",
           },
         ]);
 
@@ -2215,7 +2215,7 @@ assistant
           id: "system",
           role: "system",
           content:
-            "You are a coding assistant running in the terminal app on ryOS.",
+            "You are a coding assistant running in the terminal app on apartheidOS.",
         },
       ]);
 
@@ -2249,7 +2249,7 @@ assistant
           id: "system",
           role: "system",
           content:
-            "You are a coding assistant running in the terminal app on ryOS.",
+            "You are a coding assistant running in the terminal app on apartheidOS.",
         },
       ]);
 
@@ -2997,9 +2997,9 @@ assistant
             version: "1.0",
             creator: {
               name: "Ryo",
-              url: "https://github.com/ryokun6/ryos",
+              url: "https://github.com/ryokun6/apartheidOS",
             },
-            github: "https://github.com/ryokun6/ryos",
+            github: "https://github.com/ryokun6/apartheidOS",
             icon: "/icons/terminal.png",
           }
         }

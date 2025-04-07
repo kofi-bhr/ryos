@@ -1,7 +1,7 @@
 {
-  "name": "ryOS",
-  "short_name": "ryOS",
-  "description": "A web-based OS experience, made with Cursor",
+  "name": "ApartheidOS",
+  "short_name": "ApartheidOS",
+  "description": "An exploration of FW De Klerk's Apartheid Legacy",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",

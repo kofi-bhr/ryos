@@ -43,7 +43,7 @@ export const appMetadata = {
     name: "Ryo Lu",
     url: "https://ryo.lu",
   },
-  github: "https://github.com/ryokun6/ryos",
+  github: "https://github.com/ryokun6/apartheidOS",
   icon: "/icons/ipod.png",
 };
 

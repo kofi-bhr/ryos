@@ -444,7 +444,7 @@ export function MinesweeperAppComponent({
               name: "Minesweeper",
               version: "1.0.0",
               creator: { name: "Ryo", url: "https://github.com/ryokun6" },
-              github: "https://github.com/ryokun6/ryos",
+              github: "https://github.com/ryokun6/apartheidOS",
               icon: "/icons/minesweeper.png",
             }
           }
